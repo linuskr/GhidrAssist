@@ -22,7 +22,7 @@ import java.util.Map;
 public class AzureProvider extends APIProvider {
     private static final Gson gson = new Gson();
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-    private static final String OPENAI_CHAT_ENDPOINT = "chat/completions";
+    private static final String OPENAI_CHAT_ENDPOINT = "chat/completions?api-version=2023-12-01-preview";
     private static final String OPENAI_MODELS_ENDPOINT = "models";
     private static final String OPENAI_EMBEDDINGS_ENDPOINT = "embeddings";
     private static final String OPENAI_EMBEDDING_MODEL = "text-embedding-ada-002";
