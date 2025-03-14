@@ -12,6 +12,8 @@ import ghidrassist.LlmApi;
 import okhttp3.*;
 import okio.BufferedSource;
 import javax.net.ssl.*;
+import javax.security.auth.callback.Callback;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.time.Duration;
@@ -101,7 +103,7 @@ public class AzureProvider extends APIProvider {
         JsonObject payload = buildChatCompletionPayload(messages, false);
 
         Request request = new Request.Builder()
-                .url(url + OPENAI_CHAT_ENDPOINT)
+                .url(url + OPENAI_CHAT_ENDPOINT).addQueryParameter("api-version", "2023-12-01-preview")
                 .post(RequestBody.create(JSON, gson.toJson(payload)))
                 .build();
 
@@ -122,7 +124,7 @@ public class AzureProvider extends APIProvider {
         JsonObject payload = buildChatCompletionPayload(messages, true);
 
         Request request = new Request.Builder()
-                .url(url + OPENAI_CHAT_ENDPOINT)
+                .url(url + OPENAI_CHAT_ENDPOINT).addQueryParameter("api-version", "2023-12-01-preview")
                 .post(RequestBody.create(JSON, gson.toJson(payload)))
                 .build();
 
@@ -192,7 +194,7 @@ public class AzureProvider extends APIProvider {
         // payload.add("format", gson.toJsonTree("json"));
 
         Request request = new Request.Builder()
-                .url(url + OPENAI_CHAT_ENDPOINT)
+                .url(url + OPENAI_CHAT_ENDPOINT).addQueryParameter("api-version", "2023-12-01-preview")
                 .post(RequestBody.create(JSON, gson.toJson(payload)))
                 .build();
 
@@ -288,7 +290,7 @@ public class AzureProvider extends APIProvider {
     @Override
     public List<String> getAvailableModels() throws IOException {
         Request request = new Request.Builder()
-                .url(url + OPENAI_MODELS_ENDPOINT)
+                .url(url + OPENAI_MODELS_ENDPOINT).addQueryParameter("api-version", "2023-12-01-preview")
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -311,11 +313,11 @@ public class AzureProvider extends APIProvider {
     @Override
     public void getEmbeddingsAsync(String text, EmbeddingCallback callback) {
         JsonObject payload = new JsonObject();
-        payload.addProperty("model", OPENAI_EMBEDDING_MODEL);
+        payload.addProperty("model", OPENAI_EMBEDDING_MODEL);.addQueryParameter("api-version", "2023-12-01-preview")
         payload.addProperty("input", text);
 
         Request request = new Request.Builder()
-                .url(super.getUrl() + OPENAI_EMBEDDINGS_ENDPOINT)
+                .url(super.getUrl() + OPENAI_EMBEDDINGS_ENDPOINT).addQueryParameter("api-version", "2023-12-01-preview")
                 .post(RequestBody.create(JSON, gson.toJson(payload)))
                 .build();
 
