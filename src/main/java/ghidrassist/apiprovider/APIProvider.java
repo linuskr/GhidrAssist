@@ -17,7 +17,8 @@ public abstract class APIProvider {
         ANTHROPIC,
         OLLAMA,
         OPENWEBUI,
-        LMSTUDIO
+        LMSTUDIO,
+        AZURE
     }
 
     protected final String name;
@@ -29,8 +30,8 @@ public abstract class APIProvider {
     protected final ProviderType type;
     protected final OkHttpClient client;
 
-    public APIProvider(String name, ProviderType type, String model, Integer maxTokens, 
-                      String url, String key, boolean disableTlsVerification) {
+    public APIProvider(String name, ProviderType type, String model, Integer maxTokens,
+            String url, String key, boolean disableTlsVerification) {
         this.name = name;
         this.type = type;
         this.model = model;
@@ -42,38 +43,64 @@ public abstract class APIProvider {
     }
 
     // Getters
-    public String getName() { return name; }
-    public ProviderType getType() { return type; }
-    public String getModel() { return model; }
-    public Integer getMaxTokens() { return maxTokens; }
-    public String getUrl() { return url; }
-    public String getKey() { return key; }
-    public boolean isDisableTlsVerification() { return disableTlsVerification; }
+    public String getName() {
+        return name;
+    }
+
+    public ProviderType getType() {
+        return type;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public Integer getMaxTokens() {
+        return maxTokens;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public boolean isDisableTlsVerification() {
+        return disableTlsVerification;
+    }
 
     protected abstract OkHttpClient buildClient();
+
     public abstract String createChatCompletion(List<ChatMessage> messages) throws IOException;
-    public abstract void streamChatCompletion(List<ChatMessage> messages, LlmApi.LlmResponseHandler handler) throws IOException;
-    public abstract String createChatCompletionWithFunctions(List<ChatMessage> messages, List<Map<String, Object>> functions) throws IOException;
+
+    public abstract void streamChatCompletion(List<ChatMessage> messages, LlmApi.LlmResponseHandler handler)
+            throws IOException;
+
+    public abstract String createChatCompletionWithFunctions(List<ChatMessage> messages,
+            List<Map<String, Object>> functions) throws IOException;
+
     public abstract List<String> getAvailableModels() throws IOException;
-    //public abstract double[] getEmbeddings(String text) throws IOException;
+
+    // public abstract double[] getEmbeddings(String text) throws IOException;
     public abstract void getEmbeddingsAsync(String text, EmbeddingCallback callback);
 
-    
     public double[] getEmbeddings(String text) throws IOException {
         CompletableFuture<double[]> future = new CompletableFuture<>();
-        
+
         getEmbeddingsAsync(text, new EmbeddingCallback() {
             @Override
             public void onSuccess(double[] embedding) {
                 future.complete(embedding);
             }
-            
+
             @Override
             public void onError(Throwable error) {
                 future.completeExceptionally(error);
             }
         });
-        
+
         try {
             return future.get(30, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -83,6 +110,7 @@ public abstract class APIProvider {
 
     public interface EmbeddingCallback {
         void onSuccess(double[] embedding);
+
         void onError(Throwable error);
     }
 }

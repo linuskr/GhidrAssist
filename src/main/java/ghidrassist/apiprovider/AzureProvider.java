@@ -30,7 +30,7 @@ public class AzureProvider extends APIProvider {
 
     public AzureProvider(String name, String model, Integer maxTokens, String url, String key,
             boolean disableTlsVerification) {
-        super(name, ProviderType.OPENAI, model, maxTokens, url, key, disableTlsVerification);
+        super(name, ProviderType.AZURE, model, maxTokens, url, key, disableTlsVerification);
     }
 
     public static AzureProvider fromConfig(APIProviderConfig config) {
