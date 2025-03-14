@@ -313,7 +313,7 @@ public class AzureProvider extends APIProvider {
     @Override
     public void getEmbeddingsAsync(String text, EmbeddingCallback callback) {
         JsonObject payload = new JsonObject();
-        payload.addProperty("model", OPENAI_EMBEDDING_MODEL).addQueryParameter("api-version", "2023-12-01-preview");
+        payload.addProperty("model", OPENAI_EMBEDDING_MODEL);.addQueryParameter("api-version", "2023-12-01-preview")
         payload.addProperty("input", text);
 
         Request request = new Request.Builder()
